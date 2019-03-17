@@ -1,4 +1,3 @@
-# coding:utf-8
 """
 main module of mondrian
 """
@@ -24,14 +23,9 @@ main module of mondrian
 
 import pdb
 import time
-<<<<<<< Updated upstream
-from utils.utility import cmp_value, value, merge_qi_value
-from functools import cmp_to_key
-=======
 from datetime import datetime
 from functools import cmp_to_key
 from .utils.utility import cmp_value, value, merge
->>>>>>> Stashed changes
 
 # warning all these variables should be re-inited, if
 # you want to run mondrian with different parameters
@@ -97,7 +91,7 @@ def get_normalized_width(partition, index):
 
 def choose_dimension(partition):
     """
-    choose dim with largest norm_width from all attributes.
+    chooss dim with largest norm_width from all attributes.
     This function can be upgraded with other distance function.
     """
     max_width = -1
@@ -129,48 +123,39 @@ def frequency_set(partition, dim):
 
 def find_median(partition, dim):
     """
-    find the middle of the partition, return split_val
+    find the middle of the partition, return splitVal
     """
     # use frequency set to get median
     frequency = frequency_set(partition, dim)
-<<<<<<< Updated upstream
-    split_val = ''
-    next_val = ''
-=======
     splitVal = ''
     nextVal = ''
->>>>>>> Stashed changes
     value_list = list(frequency.keys())
     value_list.sort(key=cmp_to_key(cmp_value))
     total = sum(frequency.values())
     middle = total // 2
     if middle < GL_K or len(value_list) <= 1:
         try:
-            return '', '', value_list[0], value_list[-1]
+            return ('', '', value_list[0], value_list[-1])
         except IndexError:
-            return '', '', '', ''
+            return ('', '', '', '')
     index = 0
     split_index = 0
     for i, qi_value in enumerate(value_list):
         index += frequency[qi_value]
         if index >= middle:
-            split_val = qi_value
+            splitVal = qi_value
             split_index = i
             break
     else:
-<<<<<<< Updated upstream
-        print("Error: cannot find split_val")
-=======
         print("Error: cannot find splitVal")
->>>>>>> Stashed changes
     try:
-        next_val = value_list[split_index + 1]
+        nextVal = value_list[split_index + 1]
     except IndexError:
         # there is a frequency value in partition
         # which can be handle by mid_set
         # e.g.[1, 2, 3, 4, 4, 4, 4]
-        next_val = split_val
-    return (split_val, next_val, value_list[0], value_list[-1])
+        nextVal = splitVal
+    return (splitVal, nextVal, value_list[0], value_list[-1])
 
 
 def anonymize_strict(partition):
@@ -188,21 +173,21 @@ def anonymize_strict(partition):
         if dim == -1:
             print("Error: dim=-1")
             pdb.set_trace()
-        (split_val, next_val, low, high) = find_median(partition, dim)
+        (splitVal, nextVal, low, high) = find_median(partition, dim)
         # Update parent low and high
         if low is not '':
             partition.low[dim] = QI_DICT[dim][low]
             partition.high[dim] = QI_DICT[dim][high]
-        if split_val == '' or split_val == next_val:
+        if splitVal == '' or splitVal == nextVal:
             # cannot split
             partition.allow[dim] = 0
             continue
         # split the group from median
-        mean = QI_DICT[dim][split_val]
+        mean = QI_DICT[dim][splitVal]
         lhs_high = partition.high[:]
         rhs_low = partition.low[:]
         lhs_high[dim] = mean
-        rhs_low[dim] = QI_DICT[dim][next_val]
+        rhs_low[dim] = QI_DICT[dim][nextVal]
         lhs = Partition([], partition.low, lhs_high)
         rhs = Partition([], rhs_low, partition.high)
         for record in partition.member:
@@ -232,28 +217,28 @@ def anonymize_relaxed(partition):
         # can not split
         RESULT.append(partition)
         return
-    # choose attribute from domain
+    # choose attrubite from domain
     dim = choose_dimension(partition)
     if dim == -1:
         print("Error: dim=-1")
         pdb.set_trace()
     # use frequency set to get median
-    (split_val, next_val, low, high) = find_median(partition, dim)
+    (splitVal, nextVal, low, high) = find_median(partition, dim)
     # Update parent low and high
     if low is not '':
         partition.low[dim] = QI_DICT[dim][low]
         partition.high[dim] = QI_DICT[dim][high]
-    if split_val == '':
+    if splitVal == '':
         # cannot split
         partition.allow[dim] = 0
         anonymize_relaxed(partition)
         return
     # split the group from median
-    mean = QI_DICT[dim][split_val]
+    mean = QI_DICT[dim][splitVal]
     lhs_high = partition.high[:]
     rhs_low = partition.low[:]
     lhs_high[dim] = mean
-    rhs_low[dim] = QI_DICT[dim][next_val]
+    rhs_low[dim] = QI_DICT[dim][nextVal]
     lhs = Partition([], partition.low, lhs_high)
     rhs = Partition([], rhs_low, partition.high)
     mid_set = []
@@ -358,25 +343,17 @@ def mondrian(data, k, relax=False, QI_num=-1):
         dp += len(partition) ** 2
         for record in partition.member[:]:
             for index in range(QI_LEN):
-<<<<<<< Updated upstream
-                record[index] = merge_qi_value(QI_ORDER[index][partition.low[index]],
-                                QI_ORDER[index][partition.high[index]])
-            result.append(record)
-    # If you want to get NCP values instead of percentage
-    # please remove next three lines
-    ncp /= QI_LEN
-    ncp /= data_size
-    ncp *= 100
-=======
+                # 这边可以来一个merge函数，负责将数值进行泛化
                 record[index] = merge(QI_ORDER[index][partition.low[index]],
                                 QI_ORDER[index][partition.high[index]])
 
             result.append(record)
->>>>>>> Stashed changes
     if __DEBUG:
         from decimal import Decimal
         print("Discernability Penalty=%.2E" % Decimal(str(dp)))
         print("size of partitions=%d" % len(RESULT))
         print("K=%d" % k)
         print("NCP = %.2f %%" % ncp)
+        # print[len(t) for t in RESULT]
+        # pdb.set_trace()
     return (result, (ncp, rtime))

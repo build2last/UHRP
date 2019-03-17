@@ -55,7 +55,7 @@ def read_data():
         except KeyError:
             conditiondata[row[1]] = [row]
     hashdata = {}
-    for k, v in list(userdata.items()):
+    for k, v in userdata.iteritems():
         if k in conditiondata:
             temp = []
             for t in conditiondata[k]:
@@ -65,7 +65,7 @@ def read_data():
                 index = QI_INDEX[i]
                 hashdata[k].append(v[index])
             hashdata[k].append(temp)
-    for k, v in list(hashdata.items()):
+    for k, v in hashdata.iteritems():
         data.append(v)
     userfile.close()
     conditionfile.close()

@@ -1,43 +1,28 @@
-# !/usr/bin/env python
-# coding:utf-8
 """
 public functions
 """
 
-<<<<<<< Updated upstream
-from datetime import datetime
-import time
-=======
 # !/usr/bin/env python
 # coding=utf-8
 from datetime import datetime
 
->>>>>>> Stashed changes
-
 def cmp(x, y):
     if x > y:
         return 1
-<<<<<<< Updated upstream
     elif x==y:
-        return 0
-    else:
-        return -1
-=======
-    elif x == y:
         return 0
     else:
         return -1
 
 
 def value(x):
-    '''Returns a numeric type that supports addition and subtraction'''
+    '''返回支持加减运算的数值类型'''
     if isinstance(x, (int, float)):
         return float(x)
     elif isinstance(x, datetime):
         return x.timestamp()
     else:
         return float(x)
->>>>>>> Stashed changes
 
 
 def cmp_str(element1, element2):
@@ -49,10 +34,7 @@ def cmp_str(element1, element2):
     except ValueError:
         return cmp(element1, element2)
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 def cmp_value(element1, element2):
     if isinstance(element1, str):
         return cmp_str(element1, element2)
@@ -60,34 +42,8 @@ def cmp_value(element1, element2):
         return cmp(element1, element2)
 
 
-<<<<<<< Updated upstream
-def value(x):
-    '''Return the numeric type that supports addition and subtraction'''
-    if isinstance(x, (int, float)):
-        return float(x)
-    elif isinstance(x, datetime):
-        return time.mktime(x.timetuple())
-        # return x.timestamp() # not supported by python 2.7
-    else:
-        try:
-            return float(x)
-        except Exception as e:
-            return x
-
-
-def merge_qi_value(x_left, x_right, connect_str='~'):
-    '''Connect the interval boundary value as a generalized interval and return the result as a string
-    return:
-        result:string
-    '''
-    if isinstance(x_left, (int, float)):
-        if x_left == x_right:
-            result = '%d' % (x_left)
-        else:
-            result = '%d%s%d' % (x_left, connect_str, x_right)
-=======
 def merge(x_left, x_right, connect_str="~"):
-    '''Concatenates interval boundary values as generalized intervals and returns the result as a string
+    '''连接区间边界值作为泛化后的区间并以字符串的形式返回结果
     return:
         x_left:string
     '''
@@ -96,34 +52,22 @@ def merge(x_left, x_right, connect_str="~"):
             result = str(x_left)
         else:
             result = str(x_left) + connect_str + str(x_right)
->>>>>>> Stashed changes
     elif isinstance(x_left, str):
         if x_left == x_right:
             result = x_left
         else:
             result = x_left + connect_str + x_right
     elif isinstance(x_left, datetime):
-<<<<<<< Updated upstream
-        # Generalize the datetime type value
-        begin_date = x_left.strftime("%Y-%m-%d %H:%M:%S")
-        end_date = x_right.strftime("%Y-%m-%d %H:%M:%S")
-        result = begin_date + connect_str + end_date
-    return result
-
-
-def covert_to_raw(result, intuitive_order, delimiter='~'):
-=======
         # 对日期进行泛化
         begin_date = x_left.strftime("%Y-%m-%d %H:%M:%S")
         end_date = x_right.strftime("%Y-%m-%d %H:%M:%S")
-        result = begin_date + connect_str + end_date
+        result = begin_date +connect_str+ end_date
     else:
         result = x_left + connect_str + x_right
     return result
 
 
 def covert_to_raw(result, intuitive_order, delimiter="~"):
->>>>>>> Stashed changes
     """
     During preprocessing, categorical attrbutes are covert to
     numeric attrbute using intutive order. This function will covert
@@ -154,7 +98,3 @@ def covert_to_raw(result, intuitive_order, delimiter="~"):
         else:
             covert_result.append(covert_record + [delimiter.join(record[-1])])
     return covert_result
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
